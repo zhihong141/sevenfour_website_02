@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commissions — Sevenfour</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #d4cfc9;
+      --fg-dim: #8a8480;
+      --term-bg: rgba(12, 14, 12, 0.98);
+      --term-border: rgba(180,200,160,0.18);
+      --term-green: #7aab6e;
+      --term-green-dim: rgba(122,171,110,0.45);
+      --term-hi: #c8dfc0;
+      --mono: 'Courier New', monospace;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+    }
+
+    /* ── SCANLINE BG ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    #nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 48px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,10,10,0.96);
+      border-bottom: 1px solid var(--term-border);
+    }
+
+    #nav-left { display: flex; align-items: center; gap: 20px; }
+
+    #nav-bracket { font-size: 12px; color: var(--fg-dim); }
+
+    #back-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+    }
+    #back-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      height: 1px; width: 0;
+      background: currentColor;
+      transition: width 0.3s;
+    }
+    #back-btn:hover { color: var(--term-hi); }
+    #back-btn:hover::after { width: 100%; }
+
+    #nav-title {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+
+    /* ── TERMINAL WRAPPER ── */
+    #terminal {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 28px 80px;
+    }
+
+    /* ── HEADER ── */
+    #term-header {
+      border: 1px solid var(--term-border);
+      margin-bottom: 2px;
+    }
+
+    #term-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 36px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--term-border);
+    }
+    .titlebar-left {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--term-green);
+    }
+    .titlebar-left .hash { color: var(--term-green-dim); }
+    .titlebar-right {
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--fg-dim);
+    }
+
+    #term-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--term-border);
+    }
+    .meta-cell {
+      padding: 12px 20px;
+      border-right: 1px solid var(--term-border);
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; line-height: 1.7;
+    }
+    .meta-cell:last-child { border-right: none; }
+    .meta-label { color: var(--fg-dim); }
+    .meta-value { color: var(--term-green); }
+
+    /* ── GRID ── */
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      border: 1px solid var(--term-border);
+      border-top: none;
+    }
+
+    .grid-item {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      background: #0c0f0c;
+      aspect-ratio: 4/3;
+    }
+
+    .grid-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease, opacity 0.3s;
+      opacity: 0.85;
+    }
+    .grid-item:hover img { transform: scale(1.03); opacity: 1; }
+
+    .grid-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .grid-item:hover .grid-item-overlay { opacity: 1; }
+
+    .grid-item-title {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-hi);
+      margin-bottom: 4px;
+    }
+    .grid-item-year {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--term-green-dim);
+    }
+
+    /* ── STATUS BAR ── */
+    #statusbar {
+      border: 1px solid var(--term-border);
+      border-top: none;
+      padding: 0 20px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+    }
+    .status-text { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+    .status-count { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--term-green-dim); }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.94);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #lightbox.visible { opacity: 1; pointer-events: all; }
+
+    #lb-inner {
+      position: relative;
+      max-width: 90vw;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    #lb-inner img {
+      max-width: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      display: block;
+    }
+    #lb-caption {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      text-align: center;
+    }
+    #lb-close {
+      position: fixed;
+      top: 24px; right: 32px;
+      background: none; border: none;
+      font-family: var(--mono);
+      font-size: 11px; letter-spacing: 0.15em;
+      color: var(--fg-dim); cursor: pointer;
+      transition: color 0.2s;
+    }
+    #lb-close:hover { color: var(--term-hi); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      #grid { grid-template-columns: 1fr; }
+      #term-meta { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div id="nav-left">
+    <span id="nav-bracket">[ ]</span>
+    <a id="back-btn" href="index.html">← Back</a>
+  </div>
+  <span id="nav-title">Commission Works</span>
+</nav>
+
+<!-- TERMINAL -->
+<div id="terminal">
+
+  <div id="term-header">
+    <div id="term-titlebar">
+      <div class="titlebar-left">
+        <span class="hash">#</span>
+        <span>Commission Archive</span>
+      </div>
+      <span class="titlebar-right">Click image to expand</span>
+    </div>
+    <div id="term-meta">
+      <div class="meta-cell">
+        <div class="meta-label">Year</div>
+        <div class="meta-value">2024 – 2026</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Role</div>
+        <div class="meta-value">Designer</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Medium</div>
+        <div class="meta-value">Graphic Design, Illustration</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Tools</div>
+        <div class="meta-value">Mixed</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="grid"></div>
+
+  <div id="statusbar">
+    <span class="status-text">Terminal v1.0 — Commission Archive</span>
+    <span class="status-count" id="count-label">0 works</span>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close">&#x2715; Close</button>
+  <div id="lb-inner">
+    <img id="lb-img" src="" alt="" />
+    <div id="lb-caption"></div>
+  </div>
+</div>
+
+<script>
+  const COMMISSIONS = [
+    {
+      title: "IMH OT Dept Logo",
+      year: "2025",
+      image: "img/commissions/imh-ot-logo.png",
+    },
+    {
+      title: "Greet Card — Horse",
+      year: "2024",
+      image: "img/commissions/greet-card-horse.png",
+    },
+    {
+      title: "Year of the Snake",
+      year: "2025",
+      image: "img/commissions/snake-calendar.png",
+    },
+    {
+      title: "OTD Beyond Production 2026 Planner",
+      year: "2026",
+      image: "img/commissions/otd-planner.png",
+    },
+  ];
+
+  const grid     = document.getElementById('grid');
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lb-img');
+  const lbCap    = document.getElementById('lb-caption');
+  const lbClose  = document.getElementById('lb-close');
+
+  document.getElementById('count-label').textContent = `${COMMISSIONS.length} works`;
+
+  COMMISSIONS.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'grid-item';
+    item.innerHTML = `
+      <img src="${c.image}" alt="${c.title}" loading="lazy" />
+      <div class="grid-item-overlay">
+        <div class="grid-item-title">${c.title}</div>
+        <div class="grid-item-year">${c.year}</div>
+      </div>
+    `;
+    item.addEventListener('click', () => {
+      lbImg.src = c.image;
+      lbImg.alt = c.title;
+      lbCap.textContent = `${c.title} — ${c.year}`;
+      lightbox.classList.add('visible');
+    });
+    grid.appendChild(item);
+  });
+
+  function closeLightbox() { lightbox.classList.remove('visible'); }
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
