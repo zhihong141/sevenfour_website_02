@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Sevenfour</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -156,7 +156,7 @@
       position: fixed;
       top: 48px; right: 0;
       width: min(440px, 100vw);
-      max-height: calc(100vh - 48px);
+      max-height: calc(100dvh - 48px);
       z-index: 90;
       background: var(--term-bg);
       border-left: 1px solid var(--term-border);
@@ -544,7 +544,7 @@
       position: fixed;
       top: 48px; right: 0;
       width: min(520px, 100vw);
-      max-height: calc(100vh - 48px);
+      max-height: calc(100dvh - 48px);
       z-index: 90;
       background: var(--term-bg);
       border-left: 1px solid var(--term-border);
@@ -652,7 +652,7 @@
       position: fixed;
       top: 48px; left: 0;
       width: min(900px, 100vw);
-      max-height: calc(100vh - 48px);
+      max-height: calc(100dvh - 48px);
       z-index: 90;
       background: var(--term-bg);
       border: 1px solid var(--term-border);
@@ -978,7 +978,7 @@
       /* panels: offset from shorter nav */
       #panel, #bio-panel, #contact-panel {
         top: 38px;
-        max-height: calc(100vh - 38px);
+        max-height: calc(100dvh - 38px);
       }
 
       /* acquisition panel: narrower */
