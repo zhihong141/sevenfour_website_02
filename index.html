@@ -942,6 +942,98 @@
       transition: color 0.2s;
     }
     #lightbox-close:hover { color: var(--fg); }
+
+    /* ── RESPONSIVE: PHONE LANDSCAPE ── */
+    @media (max-height: 500px) {
+
+      /* nav: shrink height, tighten gaps */
+      #nav { height: 38px; padding: 0 16px; }
+      #nav-left { gap: 14px; }
+      #nav-right { gap: 14px; }
+      #nav-bracket { font-size: 11px; }
+      #acq-btn, #bio-btn, #resume-btn, #contact-btn {
+        font-size: 9px; letter-spacing: 0.15em;
+      }
+      #mute-btn svg { width: 14px; height: 14px; }
+
+      /* panels: offset from shorter nav */
+      #panel, #bio-panel, #contact-panel {
+        top: 38px;
+        max-height: calc(100vh - 38px);
+      }
+
+      /* acquisition panel: narrower */
+      #panel { width: min(480px, 100vw); }
+
+      /* terminal panel: two-col stacks vertically on very small heights */
+      #panel-body { grid-template-columns: 220px 1fr; }
+      #panel-list-header { padding: 7px 16px; }
+      .work-row { padding: 9px 16px; }
+      .work-row-title { font-size: 9px; }
+      #detail-content { padding: 14px 18px 24px; }
+      #detail-title { font-size: 11px; margin-bottom: 12px; }
+      #panel-meta .panel-meta-cell { padding: 8px 16px; font-size: 8px; }
+      #panel-titlebar, #panel-statusbar { height: 30px; padding: 0 16px; }
+
+      /* bio panel */
+      #bio-content { padding: 24px 24px 40px; }
+      #bio-heading { font-size: 20px; margin-bottom: 20px; }
+      .bio-para { font-size: 11px; }
+      #bio-titlebar, #bio-statusbar { height: 30px; padding: 0 18px; }
+
+      /* contact panel */
+      #contact-content { padding: 24px 24px 40px; }
+      #contact-heading { font-size: 22px; margin-bottom: 28px; }
+      .contact-link-row { padding: 11px 0; }
+      #contact-titlebar, #contact-statusbar { height: 30px; padding: 0 18px; }
+
+      /* resume draggable window */
+      #resume-win {
+        width: min(98vw, 860px);
+        max-height: 90vh;
+      }
+      #resume-titlebar { height: 30px; padding: 0 16px; }
+      #resume-statusbar { height: 24px; padding: 0 16px; }
+      .r-section-label { padding: 10px 16px 7px; font-size: 7px; }
+      .r-col { padding: 0 16px 16px; }
+      .r-entry { padding: 12px 0; }
+      .r-role { font-size: 10px; }
+      .r-date, .r-org, .r-gpa, .r-points li { font-size: 8px; }
+      .r-skill-col { padding: 14px 16px; }
+      .r-skill-heading { font-size: 7px; margin-bottom: 8px; }
+      .r-skill-list li { font-size: 8px; }
+
+      /* copyright */
+      #copyright { bottom: 10px; right: 16px; font-size: 8px; }
+    }
+
+    /* ── RESPONSIVE: SMALL SCREENS (portrait + landscape) ── */
+    @media (max-width: 600px) {
+      #nav { padding: 0 16px; }
+      #nav-left { gap: 14px; }
+      #nav-right { gap: 14px; }
+      #acq-btn, #bio-btn, #resume-btn, #contact-btn { font-size: 9px; letter-spacing: 0.14em; }
+
+      #panel { width: 100vw; }
+      #panel-body { grid-template-columns: 1fr; }
+      #panel-detail { display: none; }
+      .work-row.active + #panel-detail { display: flex; }
+
+      #bio-panel, #contact-panel { width: 100vw; }
+      #bio-heading { font-size: 22px; }
+      #contact-heading { font-size: 22px; }
+
+      #resume-win {
+        width: 100vw;
+        max-height: 90vh;
+        top: 5vh !important;
+        left: 0 !important;
+        transform: none !important;
+      }
+      .r-cols, .r-skills-grid { grid-template-columns: 1fr; }
+      .r-col { border-right: none; border-bottom: 1px solid var(--term-border); }
+      .r-skill-col { border-right: none; border-bottom: 1px solid var(--term-border); }
+    }
   </style>
 </head>
 <body>

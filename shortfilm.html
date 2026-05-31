@@ -212,6 +212,23 @@
       #grid { grid-template-columns: 1fr; }
       #term-meta { grid-template-columns: repeat(2, 1fr); }
     }
+
+    @media (max-height: 500px) {
+      #nav { height: 36px; padding: 0 16px; }
+      #nav-bracket { font-size: 11px; }
+      #back-btn, #nav-title { font-size: 9px; letter-spacing: 0.15em; }
+      #terminal { margin: 20px auto; padding: 0 16px 40px; }
+      #term-titlebar { height: 30px; padding: 0 16px; }
+      .titlebar-right { font-size: 8px; }
+      #term-meta { grid-template-columns: repeat(4,1fr); }
+      .meta-cell { padding: 8px 14px; font-size: 8px; }
+      #grid { grid-template-columns: repeat(2, 1fr); }
+      #statusbar { height: 24px; padding: 0 16px; }
+      .status-text, .status-count { font-size: 7px; }
+      /* lightbox video fits landscape */
+      #lb-inner { width: min(96vw, 860px); }
+      #lb-video { max-height: 72vh; }
+    }
   </style>
 </head>
 <body>

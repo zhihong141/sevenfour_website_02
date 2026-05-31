@@ -249,6 +249,20 @@
       #grid { grid-template-columns: 1fr; }
       #term-meta { grid-template-columns: repeat(2, 1fr); }
     }
+
+    @media (max-height: 500px) {
+      #nav { height: 36px; padding: 0 16px; }
+      #nav-bracket { font-size: 11px; }
+      #back-btn, #nav-title { font-size: 9px; letter-spacing: 0.15em; }
+      #terminal { margin: 20px auto; padding: 0 16px 40px; }
+      #term-titlebar { height: 30px; padding: 0 16px; }
+      #term-meta { grid-template-columns: repeat(4,1fr); }
+      .meta-cell { padding: 8px 14px; font-size: 8px; }
+      #grid { grid-template-columns: repeat(3, 1fr); }
+      .grid-item { aspect-ratio: 4/3; }
+      #statusbar { height: 24px; padding: 0 16px; }
+      .status-text, .status-count { font-size: 7px; }
+    }
   </style>
 </head>
 <body>
