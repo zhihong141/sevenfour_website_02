@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short Film — Sevenfour</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #d4cfc9;
+      --fg-dim: #8a8480;
+      --term-bg: rgba(12, 14, 12, 0.98);
+      --term-border: rgba(180,200,160,0.18);
+      --term-green: #7aab6e;
+      --term-green-dim: rgba(122,171,110,0.45);
+      --term-hi: #c8dfc0;
+      --mono: 'Courier New', monospace;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    #nav {
+      position: sticky; top: 0; z-index: 100;
+      height: 48px; padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,10,10,0.96);
+      border-bottom: 1px solid var(--term-border);
+    }
+    #nav-left { display: flex; align-items: center; gap: 20px; }
+    #nav-bracket { font-size: 12px; color: var(--fg-dim); }
+    #back-btn {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--fg); text-decoration: none;
+      position: relative; transition: color 0.2s;
+    }
+    #back-btn::after {
+      content: ''; position: absolute;
+      bottom: -3px; left: 0;
+      height: 1px; width: 0;
+      background: currentColor; transition: width 0.3s;
+    }
+    #back-btn:hover { color: var(--term-hi); }
+    #back-btn:hover::after { width: 100%; }
+    #nav-title { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+
+    /* ── TERMINAL ── */
+    #terminal {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 28px 80px;
+    }
+
+    #term-header { border: 1px solid var(--term-border); margin-bottom: 2px; }
+
+    #term-titlebar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 36px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--term-border);
+    }
+    .titlebar-left {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--term-green);
+    }
+    .titlebar-left .hash { color: var(--term-green-dim); }
+    .titlebar-right { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg-dim); }
+
+    #term-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .meta-cell {
+      padding: 12px 20px;
+      border-right: 1px solid var(--term-border);
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; line-height: 1.7;
+    }
+    .meta-cell:last-child { border-right: none; }
+    .meta-label { color: var(--fg-dim); }
+    .meta-value { color: var(--term-green); }
+
+    /* ── FILM GRID ── */
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      border: 1px solid var(--term-border);
+      border-top: none;
+    }
+
+    .film-item {
+      position: relative;
+      background: #0c0f0c;
+      aspect-ratio: 16/9;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    /* video thumbnail via poster frame */
+    .film-item video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .film-item:hover video { opacity: 1; }
+
+    /* play overlay */
+    .film-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.3);
+      transition: background 0.3s;
+    }
+    .film-item:hover .film-overlay { background: rgba(0,0,0,0.1); }
+
+    .play-icon {
+      width: 48px; height: 48px;
+      border: 1px solid rgba(200,223,192,0.5);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .film-item:hover .play-icon {
+      border-color: var(--term-hi);
+      background: rgba(122,171,110,0.1);
+    }
+    .play-icon svg { width: 16px; height: 16px; fill: var(--term-hi); margin-left: 3px; }
+
+    .film-info { text-align: center; }
+    .film-title {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--term-hi);
+      margin-bottom: 4px;
+    }
+    .film-year { font-size: 9px; letter-spacing: 0.15em; color: var(--term-green-dim); }
+
+    /* ── STATUS BAR ── */
+    #statusbar {
+      border: 1px solid var(--term-border); border-top: none;
+      padding: 0 20px; height: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+    }
+    .status-text { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+    .status-count { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--term-green-dim); }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.95);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #lightbox.visible { opacity: 1; pointer-events: all; }
+
+    #lb-inner {
+      position: relative;
+      width: min(900px, 92vw);
+      display: flex; flex-direction: column; gap: 14px;
+    }
+
+    #lb-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      display: block;
+    }
+
+    #lb-meta {
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    #lb-caption {
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--fg-dim);
+    }
+    #lb-close {
+      background: none; border: none;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--fg-dim); cursor: pointer;
+      transition: color 0.2s; padding: 0;
+    }
+    #lb-close:hover { color: var(--term-hi); }
+
+    @media (max-width: 600px) {
+      #grid { grid-template-columns: 1fr; }
+      #term-meta { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div id="nav-left">
+    <span id="nav-bracket">[ ]</span>
+    <a id="back-btn" href="index.html">← Back</a>
+  </div>
+  <span id="nav-title">Short Film</span>
+</nav>
+
+<div id="terminal">
+
+  <div id="term-header">
+    <div id="term-titlebar">
+      <div class="titlebar-left">
+        <span class="hash">#</span>
+        <span>Short Film Archive</span>
+      </div>
+      <span class="titlebar-right">Click to play</span>
+    </div>
+    <div id="term-meta">
+      <div class="meta-cell">
+        <div class="meta-label">Year</div>
+        <div class="meta-value">2026</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Role</div>
+        <div class="meta-value">Director</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Medium</div>
+        <div class="meta-value">Animation</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Tools</div>
+        <div class="meta-value">AI</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="grid"></div>
+
+  <div id="statusbar">
+    <span class="status-text">Terminal v1.0 — Short Film Archive</span>
+    <span class="status-count" id="count-label">0 films</span>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div id="lb-inner">
+    <video id="lb-video" controls></video>
+    <div id="lb-meta">
+      <span id="lb-caption"></span>
+      <button id="lb-close">&#x2715; Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const FILMS = [
+    {
+      title: "Contact Lens Commercial",
+      year: "2026",
+      src: "video/shortfilm/contact-lens.mp4",
+    },
+    {
+      title: "Depressed Girl",
+      year: "2026",
+      src: "video/shortfilm/depressed-girl.mp4",
+    },
+  ];
+
+  const grid    = document.getElementById('grid');
+  const lb      = document.getElementById('lightbox');
+  const lbVideo = document.getElementById('lb-video');
+  const lbCap   = document.getElementById('lb-caption');
+  const lbClose = document.getElementById('lb-close');
+
+  document.getElementById('count-label').textContent = `${FILMS.length} films`;
+
+  FILMS.forEach(f => {
+    const item = document.createElement('div');
+    item.className = 'film-item';
+    item.innerHTML = `
+      <video src="${f.src}" muted preload="metadata"></video>
+      <div class="film-overlay">
+        <div class="play-icon">
+          <svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z"/></svg>
+        </div>
+        <div class="film-info">
+          <div class="film-title">${f.title}</div>
+          <div class="film-year">${f.year}</div>
+        </div>
+      </div>
+    `;
+
+    // seek to 10% for a preview frame
+    const vid = item.querySelector('video');
+    vid.addEventListener('loadedmetadata', () => { vid.currentTime = vid.duration * 0.1; });
+
+    item.addEventListener('click', () => {
+      lbVideo.src = f.src;
+      lbCap.textContent = `${f.title} — ${f.year}`;
+      lb.classList.add('visible');
+      lbVideo.play();
+    });
+
+    grid.appendChild(item);
+  });
+
+  function closeLb() {
+    lb.classList.remove('visible');
+    lbVideo.pause();
+    lbVideo.src = '';
+  }
+  lbClose.addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+</script>
+</body>
+</html>
