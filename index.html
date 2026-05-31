@@ -1065,7 +1065,10 @@
       /* resume draggable window */
       #resume-win {
         width: min(98vw, 860px);
-        max-height: 90vh;
+        max-height: calc(100dvh - 38px);
+        top: 38px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
       }
       #resume-titlebar { height: 30px; padding: 0 16px; }
       #resume-statusbar { height: 24px; padding: 0 16px; }
