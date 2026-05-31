@@ -204,7 +204,10 @@
       padding: 44px 36px 60px;
       position: relative; z-index: 1;
       flex: 1;
+      overflow-y: auto;
     }
+    #contact-content::-webkit-scrollbar { width: 2px; }
+    #contact-content::-webkit-scrollbar-thumb { background: var(--term-border); }
 
     #contact-sub {
       font-size: 9px; letter-spacing: 0.28em;
@@ -942,6 +945,22 @@
       transition: color 0.2s;
     }
     #lightbox-close:hover { color: var(--fg); }
+
+    /* ── RESPONSIVE: MOBILE (portrait + landscape) ── */
+    @media (max-width: 768px) {
+      #contact-panel { width: 100vw; }
+      #contact-content { padding: 24px 20px 32px; }
+      #contact-sub { font-size: 8px; margin-bottom: 10px; }
+      #contact-heading { font-size: 20px; margin-bottom: 24px; }
+      .contact-link-row { padding: 12px 0; }
+      .contact-link-label { font-size: 8px; }
+      .contact-link-val { font-size: 8px; }
+      #contact-works-label { margin-top: 20px; margin-bottom: 8px; }
+      #contact-works-card { padding: 14px 16px; }
+      .works-card-title { font-size: 10px; }
+      .works-card-url { font-size: 7px; }
+      .works-card-dots { margin-top: 10px; }
+    }
 
     /* ── RESPONSIVE: PHONE LANDSCAPE ── */
     @media (max-height: 500px) {
