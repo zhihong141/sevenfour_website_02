@@ -114,6 +114,191 @@
     #mute-btn:hover { color: var(--fg); }
     #mute-btn svg { width: 16px; height: 16px; display: block; }
 
+    /* ── RESUME BUTTON ── */
+    #resume-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      transition: color 0.2s;
+    }
+    #resume-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      height: 1px; background: currentColor;
+      width: 0; transition: width 0.3s ease;
+    }
+    #resume-btn:hover { color: var(--term-hi); }
+    #resume-btn:hover::after,
+    #resume-btn.active::after { width: 100%; }
+    #resume-btn.active { color: var(--term-green); }
+
+    /* ── RESUME WINDOW ── */
+    #resume-win {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(900px, 94vw);
+      max-height: 82vh;
+      z-index: 150;
+      background: var(--term-bg);
+      border: 1px solid var(--term-border);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+    #resume-win.open { opacity: 1; pointer-events: all; }
+
+    /* scanlines */
+    #resume-win::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none; z-index: 0;
+    }
+
+    #resume-titlebar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 36px;
+      background: rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--term-border);
+      cursor: grab; user-select: none;
+      flex-shrink: 0; position: relative; z-index: 2;
+    }
+    #resume-titlebar:active { cursor: grabbing; }
+    #resume-titlebar-left {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--term-green);
+    }
+    #resume-titlebar-left .hash { color: var(--term-green-dim); }
+
+    #resume-close {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 0.15em; color: var(--fg-dim);
+      padding: 0; transition: color 0.2s; z-index: 3;
+    }
+    #resume-close:hover { color: var(--term-hi); }
+
+    #resume-body {
+      overflow-y: auto; flex: 1;
+      position: relative; z-index: 1;
+    }
+    #resume-body::-webkit-scrollbar { width: 2px; }
+    #resume-body::-webkit-scrollbar-thumb { background: var(--term-border); }
+
+    /* section label */
+    .r-section-label {
+      font-size: 8px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--term-green-dim);
+      padding: 16px 24px 10px;
+      border-bottom: 1px solid var(--term-border);
+    }
+
+    /* work/edu grid */
+    .r-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--term-border);
+    }
+    .r-col {
+      padding: 0 24px 24px;
+      border-right: 1px solid var(--term-border);
+    }
+    .r-col:last-child { border-right: none; }
+
+    .r-entry {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(180,200,160,0.07);
+    }
+    .r-entry:last-child { border-bottom: none; }
+
+    .r-date {
+      font-size: 8px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--fg-dim);
+      margin-bottom: 5px;
+    }
+    .r-role {
+      font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--term-hi);
+      margin-bottom: 3px; font-weight: normal;
+    }
+    .r-org {
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--term-green);
+      margin-bottom: 10px;
+    }
+    .r-points { list-style: none; padding: 0; }
+    .r-points li {
+      font-size: 9px; letter-spacing: 0.08em;
+      color: var(--fg-dim); line-height: 1.7;
+      padding-left: 14px; position: relative;
+      margin-bottom: 2px;
+    }
+    .r-points li::before {
+      content: '—';
+      position: absolute; left: 0;
+      color: var(--term-green-dim);
+    }
+
+    .r-gpa {
+      font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--term-green-dim);
+      margin-top: 4px;
+    }
+
+    /* skills */
+    .r-skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--term-border);
+    }
+    .r-skill-col {
+      padding: 20px 24px;
+      border-right: 1px solid var(--term-border);
+    }
+    .r-skill-col:last-child { border-right: none; }
+    .r-skill-heading {
+      font-size: 8px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--fg-dim);
+      margin-bottom: 12px;
+    }
+    .r-skill-list { list-style: none; padding: 0; }
+    .r-skill-list li {
+      font-size: 9px; letter-spacing: 0.08em;
+      color: var(--fg-dim); line-height: 1.8;
+      padding-left: 12px; position: relative;
+    }
+    .r-skill-list li::before {
+      content: '•';
+      position: absolute; left: 0;
+      color: var(--term-green);
+    }
+
+    /* status bar */
+    #resume-statusbar {
+      border-top: 1px solid var(--term-border);
+      padding: 0 20px; height: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+      flex-shrink: 0; position: relative; z-index: 2;
+    }
+    .r-status { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+
     /* ── BIO BUTTON ── */
     #bio-btn {
       font-family: var(--mono);
@@ -552,6 +737,7 @@
     <span id="nav-bracket">[ ]</span>
     <button id="acq-btn" aria-expanded="false">Acquisition</button>
     <button id="bio-btn" aria-expanded="false">Bio</button>
+    <button id="resume-btn" aria-expanded="false">Resume</button>
   </div>
   <div id="nav-right">
     <button id="mute-btn" aria-label="Toggle sound">
@@ -568,6 +754,136 @@
     </button>
   </div>
 </nav>
+
+<!-- RESUME WINDOW -->
+<div id="resume-win" role="dialog" aria-label="Resume">
+  <div id="resume-titlebar">
+    <div id="resume-titlebar-left">
+      <span class="hash">#</span>
+      <span>Resume — Zhihong</span>
+    </div>
+    <button id="resume-close" aria-label="Close">&#x2715;</button>
+  </div>
+
+  <div id="resume-body">
+
+    <!-- WORK EXPERIENCE -->
+    <div class="r-section-label">// Work Experience</div>
+    <div class="r-cols">
+      <div class="r-col">
+        <div class="r-entry">
+          <div class="r-date">Mid 2024 — Present</div>
+          <div class="r-role">Freelance Creative Designer</div>
+          <div class="r-org">Seven.Four (Personal Brand)</div>
+          <ul class="r-points">
+            <li>Conceptualised and produced original artwork across print and merchandise</li>
+            <li>Showcased work at exhibitions, engaging directly with audiences</li>
+          </ul>
+        </div>
+        <div class="r-entry">
+          <div class="r-date">Aug 2023 — Sep 2023</div>
+          <div class="r-role">Graphic Artist</div>
+          <div class="r-org">Artistsbyday</div>
+          <ul class="r-points">
+            <li>Created 2D graphics and visual assets for marketing and digital channels</li>
+            <li>Developed and executed layout compositions based on client specifications</li>
+            <li>Prepared design files for final output</li>
+          </ul>
+        </div>
+        <div class="r-entry">
+          <div class="r-date">Dec 2016 — Mar 2017</div>
+          <div class="r-role">Motion Graphics Artist / Video Editor</div>
+          <div class="r-org">Lighthouse Evangelism</div>
+          <ul class="r-points">
+            <li>Designed graphical and animation templates for internal use</li>
+            <li>Developed motion graphics visuals for promotional materials</li>
+            <li>Led post-production editing including transitions and visual effects</li>
+          </ul>
+        </div>
+      </div>
+      <div class="r-col">
+        <div class="r-entry">
+          <div class="r-date">Feb 2024 — Jan 2026</div>
+          <div class="r-role">Retail Assistant (Part-Time)</div>
+          <div class="r-org">Guardian</div>
+          <ul class="r-points">
+            <li>Assisted in product display, signage preparation, and promotional layouts</li>
+            <li>Managed customer service and inventory tracking</li>
+          </ul>
+        </div>
+        <div class="r-entry">
+          <div class="r-date">Jun 2019 — Aug 2019</div>
+          <div class="r-role">Effects Artist (Intern)</div>
+          <div class="r-org">AMC Studio</div>
+          <ul class="r-points">
+            <li>Modelled and textured 3D environment assets</li>
+            <li>Applied lighting and rendered 3D scenes with attention to realism</li>
+            <li>Executed rigid body simulations and particle effects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="r-section-label">// Education</div>
+    <div class="r-cols">
+      <div class="r-col">
+        <div class="r-entry">
+          <div class="r-date">Apr 2017 — Apr 2020</div>
+          <div class="r-role">Diploma in Digital Visual Effects</div>
+          <div class="r-org">Nanyang Polytechnic</div>
+          <div class="r-gpa">GPA: 3.55</div>
+        </div>
+      </div>
+      <div class="r-col">
+        <div class="r-entry">
+          <div class="r-date">Jan 2015 — Dec 2016</div>
+          <div class="r-role">Nitec in Visual Effects</div>
+          <div class="r-org">ITE College Central</div>
+          <div class="r-gpa">GPA: 3.87</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="r-section-label">// Skills &amp; Specialisation</div>
+    <div class="r-skills-grid">
+      <div class="r-skill-col">
+        <div class="r-skill-heading">Design Tools</div>
+        <ul class="r-skill-list">
+          <li>Adobe After Effects</li>
+          <li>Adobe Photoshop</li>
+          <li>Adobe Illustrator</li>
+          <li>Affinity Designer</li>
+        </ul>
+      </div>
+      <div class="r-skill-col">
+        <div class="r-skill-heading">3D &amp; Production</div>
+        <ul class="r-skill-list">
+          <li>Blender (3D Modeling)</li>
+          <li>Adobe Premiere Pro</li>
+          <li>AI Tools &amp; Prompt Engineering</li>
+          <li>File Management &amp; Version Control</li>
+        </ul>
+      </div>
+      <div class="r-skill-col">
+        <div class="r-skill-heading">Specialisation</div>
+        <ul class="r-skill-list">
+          <li>Typography &amp; Layout Design</li>
+          <li>Visual Design</li>
+          <li>Hybrid 3D / 2D Illustration</li>
+          <li>Hard Surface Modeling</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="resume-statusbar">
+    <span class="r-status">Terminal v1.0 — Resume</span>
+    <span class="r-status">Drag to reposition</span>
+  </div>
+</div>
 
 <!-- BIO PANEL -->
 <div id="bio-panel" role="dialog" aria-label="Bio">
@@ -813,6 +1129,54 @@
   overlay.addEventListener('click', closeBio);
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeBio(); closeLightbox(); } });
+
+  // ── Resume window ────────────────────────────────────────────────────────
+  const resumeWin   = document.getElementById('resume-win');
+  const resumeBtn   = document.getElementById('resume-btn');
+  const resumeClose = document.getElementById('resume-close');
+  const resumeBar   = document.getElementById('resume-titlebar');
+
+  function openResume() {
+    // reset to center each time
+    resumeWin.style.left = '50%';
+    resumeWin.style.top  = '50%';
+    resumeWin.style.transform = 'translate(-50%, -50%)';
+    resumeWin.classList.add('open');
+    resumeBtn.classList.add('active');
+    resumeBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeResume() {
+    resumeWin.classList.remove('open');
+    resumeBtn.classList.remove('active');
+    resumeBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  resumeBtn.addEventListener('click', () => resumeWin.classList.contains('open') ? closeResume() : openResume());
+  resumeClose.addEventListener('click', closeResume);
+
+  // drag
+  let dragging = false, dragOffX = 0, dragOffY = 0;
+
+  resumeBar.addEventListener('mousedown', (e) => {
+    if (e.target === resumeClose) return;
+    dragging = true;
+    const rect = resumeWin.getBoundingClientRect();
+    // switch from transform-centering to absolute positioning
+    resumeWin.style.transform = 'none';
+    resumeWin.style.left = rect.left + 'px';
+    resumeWin.style.top  = rect.top  + 'px';
+    dragOffX = e.clientX - rect.left;
+    dragOffY = e.clientY - rect.top;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    resumeWin.style.left = (e.clientX - dragOffX) + 'px';
+    resumeWin.style.top  = (e.clientY - dragOffY) + 'px';
+  });
+
+  document.addEventListener('mouseup', () => { dragging = false; });
 
   // ── Video ────────────────────────────────────────────────────────────────
   video.addEventListener('canplay', () => video.classList.add('loaded'));
