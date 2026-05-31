@@ -114,6 +114,133 @@
     #mute-btn:hover { color: var(--fg); }
     #mute-btn svg { width: 16px; height: 16px; display: block; }
 
+    #nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 24px; }
+
+    /* ── CONTACT BUTTON ── */
+    #contact-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      transition: color 0.2s;
+    }
+    #contact-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      height: 1px; background: currentColor;
+      width: 0; transition: width 0.3s ease;
+    }
+    #contact-btn:hover { color: var(--term-hi); }
+    #contact-btn:hover::after,
+    #contact-btn.active::after { width: 100%; }
+    #contact-btn.active { color: var(--term-green); }
+
+    /* ── CONTACT PANEL ── */
+    #contact-panel {
+      position: fixed;
+      top: 48px; right: 0;
+      width: min(440px, 100vw);
+      max-height: calc(100vh - 48px);
+      z-index: 90;
+      background: var(--term-bg);
+      border-left: 1px solid var(--term-border);
+      border-bottom: 1px solid var(--term-border);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.45s cubic-bezier(0.77, 0, 0.18, 1);
+    }
+    #contact-panel.open { transform: translateX(0); }
+
+    #contact-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none; z-index: 0;
+    }
+
+    #contact-titlebar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 36px;
+      background: rgba(0,0,0,0.35);
+      border-bottom: 1px solid var(--term-border);
+      flex-shrink: 0; position: relative; z-index: 2;
+    }
+    #contact-titlebar-left {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--term-green);
+    }
+    #contact-titlebar-left .hash { color: var(--term-green-dim); }
+
+    #contact-close {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 0.15em; color: var(--fg-dim);
+      padding: 0; transition: color 0.2s;
+    }
+    #contact-close:hover { color: var(--term-hi); }
+
+    #contact-content {
+      padding: 44px 36px 60px;
+      position: relative; z-index: 1;
+      flex: 1;
+    }
+
+    #contact-sub {
+      font-size: 9px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--term-green-dim);
+      margin-bottom: 16px;
+    }
+
+    #contact-heading {
+      font-family: 'Georgia', serif;
+      font-size: 28px; font-weight: normal;
+      line-height: 1.25; color: var(--term-hi);
+      margin-bottom: 44px;
+    }
+
+    .contact-link-row {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid var(--term-border);
+    }
+    .contact-link-row:last-child { border-bottom: 1px solid var(--term-border); }
+
+    .contact-link-label {
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--fg-dim);
+    }
+
+    .contact-link-val {
+      font-size: 9px; letter-spacing: 0.1em;
+      color: var(--term-green);
+      text-decoration: none;
+      transition: color 0.2s;
+      text-align: right;
+    }
+    .contact-link-val:hover { color: var(--term-hi); }
+
+    #contact-statusbar {
+      border-top: 1px solid var(--term-border);
+      padding: 0 24px; height: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+      flex-shrink: 0; position: relative; z-index: 2;
+    }
+    .contact-status { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+
     /* ── RESUME BUTTON ── */
     #resume-btn {
       font-family: var(--mono);
@@ -740,6 +867,7 @@
     <button id="resume-btn" aria-expanded="false">Resume</button>
   </div>
   <div id="nav-right">
+    <button id="contact-btn" aria-expanded="false">Contact</button>
     <button id="mute-btn" aria-label="Toggle sound">
       <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
@@ -754,6 +882,40 @@
     </button>
   </div>
 </nav>
+
+<!-- CONTACT PANEL -->
+<div id="contact-panel" role="dialog" aria-label="Contact">
+  <div id="contact-titlebar">
+    <div id="contact-titlebar-left">
+      <span class="hash">#</span>
+      <span>Contact</span>
+    </div>
+    <button id="contact-close" aria-label="Close">&#x2715;</button>
+  </div>
+
+  <div id="contact-content">
+    <div id="contact-sub">// Let's work together</div>
+    <h2 id="contact-heading">Got a project in mind?</h2>
+
+    <div class="contact-link-row">
+      <span class="contact-link-label">Send a Message</span>
+      <a class="contact-link-val" href="mailto:zhihong141@gmail.com">zhihong141@gmail.com</a>
+    </div>
+    <div class="contact-link-row">
+      <span class="contact-link-label">Instagram</span>
+      <a class="contact-link-val" href="https://www.instagram.com/sevenfour.heavenfall/" target="_blank" rel="noopener">@sevenfour.heavenfall</a>
+    </div>
+    <div class="contact-link-row">
+      <span class="contact-link-label">Artstation</span>
+      <a class="contact-link-val" href="https://www.artstation.com/sevenfour_heavenfall" target="_blank" rel="noopener">sevenfour_heavenfall</a>
+    </div>
+  </div>
+
+  <div id="contact-statusbar">
+    <span class="contact-status">Terminal v1.0 — Contact</span>
+    <span class="contact-status">Zhihong Studio</span>
+  </div>
+</div>
 
 <!-- RESUME WINDOW -->
 <div id="resume-win" role="dialog" aria-label="Resume">
@@ -1128,7 +1290,30 @@
   bioClose.addEventListener('click', closeBio);
   overlay.addEventListener('click', closeBio);
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeBio(); closeLightbox(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeBio(); closeContact(); closeResume(); closeLightbox(); } });
+
+  // ── Contact panel ────────────────────────────────────────────────────────
+  const contactPanel = document.getElementById('contact-panel');
+  const contactBtn   = document.getElementById('contact-btn');
+  const contactClose = document.getElementById('contact-close');
+
+  function openContact() {
+    closeBio();
+    contactPanel.classList.add('open');
+    overlay.classList.add('visible');
+    contactBtn.classList.add('active');
+    contactBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeContact() {
+    contactPanel.classList.remove('open');
+    overlay.classList.remove('visible');
+    contactBtn.classList.remove('active');
+    contactBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  contactBtn.addEventListener('click', () => contactPanel.classList.contains('open') ? closeContact() : openContact());
+  contactClose.addEventListener('click', closeContact);
+  overlay.addEventListener('click', closeContact);
 
   // ── Resume window ────────────────────────────────────────────────────────
   const resumeWin   = document.getElementById('resume-win');
