@@ -1490,7 +1490,20 @@
     iconMuted.style.display = video.muted ? 'block' : 'none';
     iconSound.style.display = video.muted ? 'none'  : 'block';
   }
-  document.getElementById('mute-btn').addEventListener('click', () => {
+
+  // Unmute on first interaction — browsers require muted autoplay,
+  // but allow unmuting once the user has engaged with the page
+  function unmuteOnInteraction() {
+    video.muted = false;
+    updateMuteUI();
+    document.removeEventListener('click', unmuteOnInteraction);
+    document.removeEventListener('keydown', unmuteOnInteraction);
+  }
+  document.addEventListener('click', unmuteOnInteraction);
+  document.addEventListener('keydown', unmuteOnInteraction);
+
+  document.getElementById('mute-btn').addEventListener('click', (e) => {
+    e.stopPropagation(); // don't double-fire the unmute listener
     video.muted = !video.muted;
     updateMuteUI();
   });
