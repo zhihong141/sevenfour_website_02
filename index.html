@@ -9,34 +9,30 @@
 
     :root {
       --bg: #0a0a0a;
-      --fg: #f0ede8;
-      --accent: #c8b89a;
-      --muted: #6b6560;
-      --panel-bg: rgba(10, 10, 10, 0.97);
-      --border: rgba(255,255,255,0.07);
-      --serif: 'Georgia', 'Times New Roman', serif;
+      --fg: #d4cfc9;
+      --fg-dim: #8a8480;
+      --accent: #b8a882;
+      --term-bg: rgba(12, 14, 12, 0.96);
+      --term-border: rgba(180,200,160,0.18);
+      --term-green: #7aab6e;
+      --term-green-dim: rgba(122,171,110,0.45);
+      --term-hi: #c8dfc0;
       --mono: 'Courier New', monospace;
-      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     html, body {
       width: 100%; height: 100%;
       background: var(--bg);
       color: var(--fg);
-      font-family: var(--sans);
+      font-family: var(--mono);
       overflow: hidden;
     }
 
     /* ── HERO ── */
-    #hero {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-    }
+    #hero { position: fixed; inset: 0; z-index: 0; }
 
     #hero-video {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
       opacity: 0;
@@ -45,16 +41,14 @@
     #hero-video.loaded { opacity: 1; }
 
     #hero-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 60%, #1a1208 0%, #0a0a0a 70%);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, #101410 0%, #0a0a0a 70%);
     }
 
     #hero::after {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%);
       pointer-events: none;
     }
 
@@ -64,34 +58,22 @@
       top: 0; left: 0; right: 0;
       z-index: 100;
       padding: 0 28px;
-      height: 52px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      height: 48px;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
     }
 
-    /* shared nav type style */
-    .nav-type {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      line-height: 1;
-      color: var(--fg);
-    }
-
-    /* left section */
     #nav-left {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
     }
 
     #nav-bracket {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1;
+      font-size: 12px;
+      color: var(--fg-dim);
+      letter-spacing: 0.05em;
     }
 
     #acq-btn {
@@ -104,7 +86,6 @@
       border: none;
       cursor: pointer;
       padding: 0;
-      line-height: 1;
       position: relative;
       transition: color 0.2s;
     }
@@ -113,225 +94,300 @@
       position: absolute;
       bottom: -3px; left: 0;
       height: 1px;
-      background: var(--fg);
+      background: currentColor;
       width: 0;
       transition: width 0.3s ease;
     }
+    #acq-btn:hover { color: var(--term-hi); }
     #acq-btn:hover::after,
     #acq-btn.active::after { width: 100%; }
-    #acq-btn.active { color: var(--accent); }
-    #acq-btn.active::after { background: var(--accent); }
+    #acq-btn.active { color: var(--term-green); }
 
-    /* center wordmark */
-    #wordmark {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--fg);
-      text-decoration: none;
-      line-height: 1;
-      justify-self: center;
-    }
-
-    /* right section */
-    #nav-right {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    /* ── MUTE BUTTON (in nav) ── */
+    /* mute */
     #mute-btn {
-      background: none;
-      border: none;
-      color: var(--fg);
-      padding: 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.2s;
-      line-height: 0;
+      background: none; border: none;
+      color: var(--fg-dim);
+      padding: 0; cursor: pointer;
+      display: flex; align-items: center;
+      transition: color 0.2s; line-height: 0;
     }
-    #mute-btn:hover { color: var(--accent); }
+    #mute-btn:hover { color: var(--fg); }
     #mute-btn svg { width: 16px; height: 16px; display: block; }
-
-    /* ── ACQUISITION PANEL ── */
-    #panel {
-      position: fixed;
-      top: 0; left: 0;
-      width: min(560px, 100vw);
-      height: 100vh;
-      z-index: 90;
-      background: var(--panel-bg);
-      border-right: 1px solid var(--border);
-      transform: translateX(-100%);
-      transition: transform 0.55s cubic-bezier(0.77, 0, 0.18, 1);
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    #panel.open { transform: translateX(0); }
-
-    #panel::-webkit-scrollbar { width: 3px; }
-    #panel::-webkit-scrollbar-track { background: transparent; }
-    #panel::-webkit-scrollbar-thumb { background: var(--border); }
-
-    #panel-header {
-      padding: 28px 36px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: var(--panel-bg);
-      z-index: 2;
-    }
-    #panel-title {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    #panel-close {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1;
-      padding: 0;
-      transition: color 0.2s;
-    }
-    #panel-close:hover { color: var(--fg); }
-
-    #panel-list {
-      padding: 0 36px 60px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── ARTWORK ITEM ── */
-    .artwork {
-      padding: 36px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-    }
-    .artwork:last-child { border-bottom: none; }
-
-    .artwork-thumb {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      display: block;
-      margin-bottom: 20px;
-      opacity: 0.85;
-      transition: opacity 0.3s;
-      background: #111;
-    }
-    .artwork:hover .artwork-thumb { opacity: 1; }
-
-    .artwork-thumb-placeholder {
-      width: 100%;
-      aspect-ratio: 16/9;
-      margin-bottom: 20px;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      text-transform: uppercase;
-      transition: background 0.3s;
-    }
-    .artwork:hover .artwork-thumb-placeholder { background: #161616; }
-
-    .artwork-title {
-      font-family: var(--serif);
-      font-size: 17px;
-      font-weight: normal;
-      letter-spacing: 0.04em;
-      color: var(--fg);
-      margin-bottom: 14px;
-      line-height: 1.3;
-    }
-
-    .artwork-meta {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 6px 0;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.14em;
-    }
-    .meta-key { text-transform: uppercase; color: var(--muted); }
-    .meta-val { color: var(--accent); text-transform: uppercase; }
-
-    .artwork-desc {
-      margin-top: 16px;
-      font-size: 11px;
-      line-height: 1.75;
-      color: var(--muted);
-      letter-spacing: 0.03em;
-      display: none;
-    }
-    .artwork.expanded .artwork-desc { display: block; }
 
     /* ── OVERLAY ── */
     #overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      background: rgba(0,0,0,0.4);
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: 80;
+      background: rgba(0,0,0,0.35);
+      opacity: 0; pointer-events: none;
       transition: opacity 0.4s;
     }
     #overlay.visible { opacity: 1; pointer-events: all; }
 
-    /* ── CREDITS ── */
-    #credits {
+    /* ── TERMINAL PANEL ── */
+    #panel {
       position: fixed;
-      bottom: 28px;
-      right: 36px;
-      z-index: 10;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      color: var(--muted);
+      top: 48px; left: 0;
+      width: min(900px, 100vw);
+      max-height: calc(100vh - 48px);
+      z-index: 90;
+      background: var(--term-bg);
+      border: 1px solid var(--term-border);
+      border-top: none;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+    }
+    #panel.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    /* scanline texture */
+    #panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* titlebar */
+    #panel-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 36px;
+      border-bottom: 1px solid var(--term-border);
+      background: rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    #panel-titlebar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      text-align: right;
+      color: var(--term-green);
+    }
+    #panel-titlebar-left .hash { color: var(--term-green-dim); }
+
+    #panel-close {
+      background: none; border: none;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--fg-dim);
+      padding: 0;
+      transition: color 0.2s;
+    }
+    #panel-close:hover { color: var(--term-hi); }
+
+    /* meta row */
+    #panel-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--term-border);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .panel-meta-cell {
+      padding: 12px 20px;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      line-height: 1.6;
+    }
+    .panel-meta-cell:first-child { border-right: 1px solid var(--term-border); }
+
+    /* body: two-column layout */
+    #panel-body {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* left: work list */
+    #panel-list {
+      border-right: 1px solid var(--term-border);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #panel-list::-webkit-scrollbar { width: 2px; }
+    #panel-list::-webkit-scrollbar-thumb { background: var(--term-border); }
+
+    #panel-list-header {
+      padding: 10px 20px;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-green-dim);
+      border-bottom: 1px solid var(--term-border);
+    }
+
+    .work-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 20px;
+      border-bottom: 1px solid rgba(180,200,160,0.07);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .work-row:hover { background: rgba(122,171,110,0.06); }
+    .work-row.active { background: rgba(122,171,110,0.12); }
+
+    .work-row-title {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fg);
+      transition: color 0.15s;
+    }
+    .work-row:hover .work-row-title,
+    .work-row.active .work-row-title { color: var(--term-hi); }
+
+    .work-row-year {
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--fg-dim);
+    }
+
+    /* right: detail */
+    #panel-detail {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    #panel-detail::-webkit-scrollbar { width: 2px; }
+    #panel-detail::-webkit-scrollbar-thumb { background: var(--term-border); }
+
+    #detail-thumb-wrap {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #0c0f0c;
+      border-bottom: 1px solid var(--term-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    #detail-thumb-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .detail-no-thumb {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-green-dim);
+    }
+
+    #detail-content {
+      padding: 20px 24px 32px;
+      flex: 1;
+    }
+    #detail-title {
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-hi);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 8px 0;
+      margin-bottom: 20px;
+    }
+    .d-key {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+    .d-val {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--term-green);
+    }
+    #detail-desc {
+      font-size: 10px;
       line-height: 1.8;
-      opacity: 0.6;
+      color: var(--fg-dim);
+      letter-spacing: 0.05em;
+      border-top: 1px solid var(--term-border);
+      padding-top: 16px;
+      margin-top: 4px;
+    }
+
+    /* status bar */
+    #panel-statusbar {
+      border-top: 1px solid var(--term-border);
+      padding: 0 20px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+    .status-text {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+    .status-version {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-green-dim);
     }
 
     /* ── LIGHTBOX ── */
     #lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
+      position: fixed; inset: 0; z-index: 200;
       background: rgba(0,0,0,0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
     }
     #lightbox.visible { opacity: 1; pointer-events: all; }
     #lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; }
     #lightbox-close {
-      position: absolute;
-      top: 28px; right: 36px;
+      position: absolute; top: 24px; right: 32px;
       background: none; border: none;
-      color: var(--muted); font-size: 22px;
-      cursor: pointer; transition: color 0.2s;
+      color: var(--fg-dim); font-size: 20px;
+      cursor: pointer; font-family: var(--mono);
+      transition: color 0.2s;
     }
     #lightbox-close:hover { color: var(--fg); }
   </style>
@@ -352,9 +408,6 @@
     <span id="nav-bracket">[ ]</span>
     <button id="acq-btn" aria-expanded="false">Acquisition</button>
   </div>
-
-  <a id="wordmark" href="#">Sevenfour</a>
-
   <div id="nav-right">
     <button id="mute-btn" aria-label="Toggle sound">
       <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -374,24 +427,54 @@
 <!-- OVERLAY -->
 <div id="overlay"></div>
 
-<!-- ACQUISITION PANEL -->
-<div id="panel" role="dialog" aria-label="Acquisition — Selected Works">
-  <div id="panel-header">
-    <span id="panel-title">Acquisition — Selected Works</span>
-    <button id="panel-close" aria-label="Close panel">&#x2715;</button>
-  </div>
-  <div id="panel-list"></div>
-</div>
+<!-- TERMINAL PANEL -->
+<div id="panel" role="dialog" aria-label="Acquisition Terminal">
 
-<!-- CREDITS -->
-<div id="credits">
-  Motion &amp; Visual Development<br/>
-  Available for Acquisition
+  <div id="panel-titlebar">
+    <div id="panel-titlebar-left">
+      <span class="hash">#</span>
+      <span>Acquisition Terminal</span>
+    </div>
+    <button id="panel-close" aria-label="Close">&#x2715;</button>
+  </div>
+
+  <div id="panel-meta">
+    <div class="panel-meta-cell">
+      Works available for acquisition<br/>
+      Click entry to view details
+    </div>
+    <div class="panel-meta-cell">
+      Selected works — ongoing<br/>
+      Motion &amp; Visual Development
+    </div>
+  </div>
+
+  <div id="panel-body">
+    <div id="panel-list">
+      <div id="panel-list-header">Works — <span id="work-count">0</span></div>
+    </div>
+    <div id="panel-detail">
+      <div id="detail-thumb-wrap">
+        <span class="detail-no-thumb">[ Select a work ]</span>
+      </div>
+      <div id="detail-content">
+        <div id="detail-title">—</div>
+        <div class="detail-meta-grid" id="detail-meta"></div>
+        <div id="detail-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-statusbar">
+    <span class="status-text">Terminal v1.0 — Ready</span>
+    <span class="status-version">Zhihong Studio</span>
+  </div>
+
 </div>
 
 <!-- LIGHTBOX -->
 <div id="lightbox">
-  <button id="lightbox-close" aria-label="Close">&#x2715;</button>
+  <button id="lightbox-close">&#x2715;</button>
   <img id="lightbox-img" src="" alt="" />
 </div>
 
@@ -446,57 +529,81 @@
   ];
   // ─────────────────────────────────────────────────────────────────────────
 
-  const panel    = document.getElementById('panel');
-  const acqBtn   = document.getElementById('acq-btn');
-  const closeBtn = document.getElementById('panel-close');
-  const overlay  = document.getElementById('overlay');
-  const list     = document.getElementById('panel-list');
-  const video    = document.getElementById('hero-video');
-  const lightbox = document.getElementById('lightbox');
-  const lbImg    = document.getElementById('lightbox-img');
-  const lbClose  = document.getElementById('lightbox-close');
+  const panel     = document.getElementById('panel');
+  const acqBtn    = document.getElementById('acq-btn');
+  const closeBtn  = document.getElementById('panel-close');
+  const overlay   = document.getElementById('overlay');
+  const listEl    = document.getElementById('panel-list');
+  const video     = document.getElementById('hero-video');
+  const lightbox  = document.getElementById('lightbox');
+  const lbImg     = document.getElementById('lightbox-img');
+  const lbClose   = document.getElementById('lightbox-close');
 
-  // Build artwork list
-  WORKS.forEach((w) => {
-    const el = document.createElement('div');
-    el.className = 'artwork';
+  document.getElementById('work-count').textContent = WORKS.length;
 
-    const thumb = w.image
-      ? `<img class="artwork-thumb" src="${w.image}" alt="${w.title}" loading="lazy" />`
-      : `<div class="artwork-thumb-placeholder">[ ${w.medium} ]</div>`;
+  // ── Build work list rows ─────────────────────────────────────────────────
+  let activeRow = null;
 
-    el.innerHTML = `
-      ${thumb}
-      <div class="artwork-title">${w.title}</div>
-      <div class="artwork-meta">
-        <span class="meta-key">Year</span>  <span class="meta-val">${w.year}</span>
-        <span class="meta-key">Medium</span><span class="meta-val">${w.medium}</span>
-        <span class="meta-key">Role</span>  <span class="meta-val">${w.role}</span>
-        <span class="meta-key">Tools</span> <span class="meta-val">${w.tools}</span>
-      </div>
-      ${w.desc ? `<p class="artwork-desc">${w.desc}</p>` : ''}
+  WORKS.forEach((w, i) => {
+    const row = document.createElement('div');
+    row.className = 'work-row';
+    row.innerHTML = `
+      <span class="work-row-title">${w.title}</span>
+      <span class="work-row-year">${w.year}</span>
     `;
-
-    el.addEventListener('click', (e) => {
-      if (e.target.tagName === 'IMG') { openLightbox(w.image, w.title); return; }
-      el.classList.toggle('expanded');
+    row.addEventListener('click', () => {
+      if (activeRow) activeRow.classList.remove('active');
+      row.classList.add('active');
+      activeRow = row;
+      showDetail(w);
     });
+    listEl.appendChild(row);
 
-    list.appendChild(el);
+    // auto-select first
+    if (i === 0) { row.click(); }
   });
 
-  // Panel
-  function openPanel()  { panel.classList.add('open'); overlay.classList.add('visible'); acqBtn.classList.add('active'); acqBtn.setAttribute('aria-expanded','true'); }
-  function closePanel() { panel.classList.remove('open'); overlay.classList.remove('visible'); acqBtn.classList.remove('active'); acqBtn.setAttribute('aria-expanded','false'); }
+  function showDetail(w) {
+    const thumbWrap = document.getElementById('detail-thumb-wrap');
+    if (w.image) {
+      thumbWrap.innerHTML = `<img src="${w.image}" alt="${w.title}" />`;
+      thumbWrap.querySelector('img').addEventListener('click', () => openLightbox(w.image, w.title));
+    } else {
+      thumbWrap.innerHTML = `<span class="detail-no-thumb">[ ${w.medium} ]</span>`;
+    }
+    document.getElementById('detail-title').textContent = w.title;
+    document.getElementById('detail-meta').innerHTML = `
+      <span class="d-key">Year</span>  <span class="d-val">${w.year}</span>
+      <span class="d-key">Medium</span><span class="d-val">${w.medium}</span>
+      <span class="d-key">Role</span>  <span class="d-val">${w.role}</span>
+      <span class="d-key">Tools</span> <span class="d-val">${w.tools}</span>
+    `;
+    document.getElementById('detail-desc').textContent = w.desc || '';
+  }
+
+  // ── Panel open/close ─────────────────────────────────────────────────────
+  function openPanel() {
+    panel.classList.add('open');
+    overlay.classList.add('visible');
+    acqBtn.classList.add('active');
+    acqBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('visible');
+    acqBtn.classList.remove('active');
+    acqBtn.setAttribute('aria-expanded', 'false');
+  }
 
   acqBtn.addEventListener('click', () => panel.classList.contains('open') ? closePanel() : openPanel());
   closeBtn.addEventListener('click', closePanel);
   overlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePanel(); closeLightbox(); } });
 
-  // Video fade-in
+  // ── Video ────────────────────────────────────────────────────────────────
   video.addEventListener('canplay', () => video.classList.add('loaded'));
 
-  // Mute toggle
+  // ── Mute ─────────────────────────────────────────────────────────────────
   const iconMuted = document.getElementById('icon-muted');
   const iconSound = document.getElementById('icon-sound');
 
@@ -504,21 +611,16 @@
     iconMuted.style.display = video.muted ? 'block' : 'none';
     iconSound.style.display = video.muted ? 'none'  : 'block';
   }
-
   document.getElementById('mute-btn').addEventListener('click', () => {
     video.muted = !video.muted;
     updateMuteUI();
   });
 
-  // Lightbox
-  function openLightbox(src, alt)  { lbImg.src = src; lbImg.alt = alt; lightbox.classList.add('visible'); }
-  function closeLightbox()         { lightbox.classList.remove('visible'); }
+  // ── Lightbox ──────────────────────────────────────────────────────────────
+  function openLightbox(src, alt) { lbImg.src = src; lbImg.alt = alt; lightbox.classList.add('visible'); }
+  function closeLightbox()        { lightbox.classList.remove('visible'); }
   lbClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closePanel(); closeLightbox(); }
-  });
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
 </script>
 </body>
 </html>
