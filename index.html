@@ -241,6 +241,79 @@
     }
     .contact-link-val:hover { color: var(--term-hi); }
 
+    /* works carousel card */
+    #contact-works-label {
+      font-size: 8px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--term-green-dim);
+      margin-top: 32px; margin-bottom: 12px;
+    }
+
+    #contact-works-card {
+      display: block;
+      text-decoration: none;
+      border: 1px solid var(--term-border);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    #contact-works-card:hover {
+      border-color: var(--term-green);
+      background: rgba(122,171,110,0.05);
+    }
+
+    /* animated scan line on hover */
+    #contact-works-card::before {
+      content: '';
+      position: absolute;
+      top: -100%; left: 0; right: 0;
+      height: 1px;
+      background: var(--term-green);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    #contact-works-card:hover::before {
+      opacity: 0.4;
+      animation: scan-line 1.2s linear infinite;
+    }
+    @keyframes scan-line {
+      from { top: -2px; }
+      to   { top: 102%; }
+    }
+
+    .works-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .works-card-title {
+      font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--term-hi);
+    }
+    .works-card-arrow {
+      font-size: 12px; color: var(--term-green);
+      transition: transform 0.2s;
+    }
+    #contact-works-card:hover .works-card-arrow { transform: translateX(4px); }
+
+    .works-card-url {
+      font-size: 8px; letter-spacing: 0.12em;
+      color: var(--fg-dim);
+    }
+
+    /* carousel dots — purely decorative */
+    .works-card-dots {
+      display: flex; gap: 5px; margin-top: 14px;
+    }
+    .works-card-dot {
+      width: 18px; height: 2px;
+      background: var(--term-green-dim);
+      transition: background 0.2s, width 0.2s;
+    }
+    .works-card-dot.active {
+      width: 28px;
+      background: var(--term-green);
+    }
+
     #contact-statusbar {
       border-top: 1px solid var(--term-border);
       padding: 0 24px; height: 28px;
@@ -919,6 +992,20 @@
       <span class="contact-link-label">Artstation</span>
       <a class="contact-link-val" href="https://www.artstation.com/sevenfour_heavenfall" target="_blank" rel="noopener">sevenfour_heavenfall</a>
     </div>
+
+    <div id="contact-works-label">// Works</div>
+    <a id="contact-works-card" href="https://sevenfour-visualdiary.vercel.app/" target="_blank" rel="noopener">
+      <div class="works-card-top">
+        <span class="works-card-title">Visual Diary</span>
+        <span class="works-card-arrow">→</span>
+      </div>
+      <div class="works-card-url">sevenfour-visualdiary.vercel.app</div>
+      <div class="works-card-dots">
+        <div class="works-card-dot active"></div>
+        <div class="works-card-dot"></div>
+        <div class="works-card-dot"></div>
+      </div>
+    </a>
   </div>
 
   <div id="contact-statusbar">
