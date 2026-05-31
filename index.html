@@ -345,6 +345,23 @@
       padding-top: 16px;
       margin-top: 4px;
     }
+    #detail-link {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--term-green);
+      text-decoration: none;
+      border: 1px solid var(--term-green-dim);
+      padding: 7px 14px;
+      transition: background 0.2s, color 0.2s;
+    }
+    #detail-link:hover {
+      background: var(--term-green);
+      color: #0a0a0a;
+    }
+    #detail-link.hidden { display: none; }
 
     /* status bar */
     #panel-statusbar {
@@ -461,6 +478,7 @@
         <div id="detail-title">—</div>
         <div class="detail-meta-grid" id="detail-meta"></div>
         <div id="detail-desc"></div>
+        <a id="detail-link" href="#" target="_blank" rel="noopener" class="hidden"></a>
       </div>
     </div>
   </div>
@@ -482,13 +500,15 @@
   // ── WORKS DATA ────────────────────────────────────────────────────────────
   const WORKS = [
     {
-      title: "Untitled 001",
-      year: "2024",
-      medium: "Digital / 3D Render",
-      role: "Art Direction, 3D",
-      tools: "Blender, Octane, After Effects",
-      desc: "A study in form and negative space. Procedurally generated geometry rendered under a single point source.",
+      title: "CTRL+",
+      year: "2026",
+      medium: "Digital Art",
+      role: "Art Director",
+      tools: "GPT Image, Klingai",
+      desc: "TV channel branding concept for CTRL+ — Controlled Chaos Broadcasting. Identity built around bold typographic forms and a controlled tension between order and noise.",
       image: "",
+      link: "https://www.behance.net/gallery/248213117/Proj-CTRL-A-TV-Channel-Branding",
+      linkLabel: "View on Behance",
     },
     {
       title: "Passage",
@@ -579,6 +599,14 @@
       <span class="d-key">Tools</span> <span class="d-val">${w.tools}</span>
     `;
     document.getElementById('detail-desc').textContent = w.desc || '';
+    const linkEl = document.getElementById('detail-link');
+    if (w.link) {
+      linkEl.href = w.link;
+      linkEl.textContent = w.linkLabel || 'View Project';
+      linkEl.classList.remove('hidden');
+    } else {
+      linkEl.classList.add('hidden');
+    }
   }
 
   // ── Panel open/close ─────────────────────────────────────────────────────
