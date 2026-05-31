@@ -1005,10 +1005,11 @@
       /* ── resume window ── */
       #resume-win {
         width: 100vw;
-        max-height: 92dvh;
-        top: 4dvh !important;
+        max-height: calc(100dvh - 48px);
+        top: 48px !important;
         left: 0 !important;
         transform: none !important;
+        box-shadow: none;
       }
       .r-cols, .r-skills-grid { grid-template-columns: 1fr; }
       .r-col { border-right: none; border-bottom: 1px solid var(--term-border); }
@@ -1608,10 +1609,16 @@
   const resumeBar   = document.getElementById('resume-titlebar');
 
   function openResume() {
-    // reset to center each time
-    resumeWin.style.left = '50%';
-    resumeWin.style.top  = '50%';
-    resumeWin.style.transform = 'translate(-50%, -50%)';
+    // on mobile, CSS handles position via media query — only set JS centering on desktop
+    if (window.innerWidth > 768) {
+      resumeWin.style.left = '50%';
+      resumeWin.style.top  = '50%';
+      resumeWin.style.transform = 'translate(-50%, -50%)';
+    } else {
+      resumeWin.style.left = '';
+      resumeWin.style.top  = '';
+      resumeWin.style.transform = '';
+    }
     resumeWin.classList.add('open');
     resumeBtn.classList.add('active');
     resumeBtn.setAttribute('aria-expanded', 'true');
@@ -1630,6 +1637,7 @@
 
   resumeBar.addEventListener('mousedown', (e) => {
     if (e.target === resumeClose) return;
+    if (window.innerWidth <= 768) return; // no drag on mobile
     dragging = true;
     const rect = resumeWin.getBoundingClientRect();
     // switch from transform-centering to absolute positioning
