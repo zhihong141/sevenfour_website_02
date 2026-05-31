@@ -946,8 +946,56 @@
     }
     #lightbox-close:hover { color: var(--fg); }
 
-    /* ── RESPONSIVE: MOBILE (portrait + landscape) ── */
-    @media (max-width: 768px) {
+    /* ── RESPONSIVE: PHONE PORTRAIT ── */
+    @media (max-width: 768px) and (orientation: portrait) {
+
+      /* ── hero overlay: contain so full text is visible ── */
+      #hero-overlay-text {
+        object-fit: contain;
+        object-position: center center;
+      }
+
+      /* ── nav ── */
+      #nav { padding: 0 16px; gap: 8px; }
+      #nav-left { gap: 12px; }
+      #nav-right { gap: 12px; }
+      #acq-btn, #bio-btn, #resume-btn, #contact-btn { font-size: 9px; letter-spacing: 0.13em; }
+      #nav-bracket { display: none; }
+
+      /* ── acquisition panel: full width, stacked layout ── */
+      #panel { width: 100vw; }
+
+      #panel-body {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* work list takes natural height, no fixed column */
+      #panel-list {
+        border-right: none;
+        border-bottom: 1px solid var(--term-border);
+        max-height: 38vh;
+        overflow-y: auto;
+      }
+
+      /* detail drops below the list */
+      #panel-detail {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+
+      #detail-thumb-wrap { aspect-ratio: 16/9; }
+      #detail-content { padding: 16px 18px 24px; }
+      #detail-title { font-size: 11px; margin-bottom: 12px; }
+
+      /* ── bio panel ── */
+      #bio-panel { width: 100vw; }
+      #bio-heading { font-size: 22px; }
+      .bio-para { font-size: 12px; }
+
+      /* ── contact panel ── */
       #contact-panel { width: 100vw; }
       #contact-content { padding: 24px 20px 32px; }
       #contact-sub { font-size: 8px; margin-bottom: 10px; }
@@ -959,7 +1007,21 @@
       #contact-works-card { padding: 14px 16px; }
       .works-card-title { font-size: 10px; }
       .works-card-url { font-size: 7px; }
-      .works-card-dots { margin-top: 10px; }
+
+      /* ── resume window ── */
+      #resume-win {
+        width: 100vw;
+        max-height: 92dvh;
+        top: 4dvh !important;
+        left: 0 !important;
+        transform: none !important;
+      }
+      .r-cols, .r-skills-grid { grid-template-columns: 1fr; }
+      .r-col { border-right: none; border-bottom: 1px solid var(--term-border); }
+      .r-skill-col { border-right: none; border-bottom: 1px solid var(--term-border); }
+
+      /* copyright */
+      #copyright { font-size: 8px; right: 16px; bottom: 14px; }
     }
 
     /* ── RESPONSIVE: PHONE LANDSCAPE ── */
