@@ -1200,6 +1200,8 @@
 
   document.getElementById('work-count').textContent = WORKS.length;
 
+  WORKS.sort((a, b) => a.title.localeCompare(b.title));
+
   // ── Build work list rows ─────────────────────────────────────────────────
   let activeRow = null;
 
