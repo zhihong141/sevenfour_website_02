@@ -58,65 +58,95 @@
       pointer-events: none;
     }
 
-    /* ── NAV ── */
+    /* ── NAV BAR ── */
     #nav {
       position: fixed;
-      top: 0; left: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
-      padding: 28px 36px;
-      display: flex;
-      align-items: flex-start;
-      gap: 32px;
+      padding: 0 28px;
+      height: 52px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
     }
 
-    #wordmark {
-      font-family: var(--serif);
-      font-size: 13px;
-      letter-spacing: 0.22em;
+    /* shared nav type style */
+    .nav-type {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
+      line-height: 1;
       color: var(--fg);
-      opacity: 0.9;
-      text-decoration: none;
+    }
+
+    /* left section */
+    #nav-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    #nav-bracket {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
       line-height: 1;
     }
 
     #acq-btn {
       font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.22em;
+      font-size: 10px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--fg);
       background: none;
       border: none;
       cursor: pointer;
       padding: 0;
       line-height: 1;
-      margin-top: 1px;
-      transition: opacity 0.2s;
       position: relative;
+      transition: color 0.2s;
     }
     #acq-btn::after {
       content: '';
-      display: block;
+      position: absolute;
+      bottom: -3px; left: 0;
       height: 1px;
-      background: var(--accent);
+      background: var(--fg);
       width: 0;
       transition: width 0.3s ease;
-      margin-top: 3px;
     }
     #acq-btn:hover::after,
     #acq-btn.active::after { width: 100%; }
+    #acq-btn.active { color: var(--accent); }
+    #acq-btn.active::after { background: var(--accent); }
 
-    /* ── MUTE BUTTON ── */
+    /* center wordmark */
+    #wordmark {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+      line-height: 1;
+      justify-self: center;
+    }
+
+    /* right section */
+    #nav-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    /* ── MUTE BUTTON (in nav) ── */
     #mute-btn {
-      position: fixed;
-      bottom: 28px;
-      left: 36px;
-      z-index: 10;
       background: none;
       border: none;
-      color: var(--muted);
-      padding: 4px;
+      color: var(--fg);
+      padding: 0;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -124,8 +154,8 @@
       transition: color 0.2s;
       line-height: 0;
     }
-    #mute-btn:hover { color: var(--fg); }
-    #mute-btn svg { width: 18px; height: 18px; display: block; }
+    #mute-btn:hover { color: var(--accent); }
+    #mute-btn svg { width: 16px; height: 16px; display: block; }
 
     /* ── ACQUISITION PANEL ── */
     #panel {
@@ -318,23 +348,28 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a id="wordmark" href="#">Sevenfour</a>
-  <button id="acq-btn" aria-expanded="false">Acquisition</button>
-</nav>
+  <div id="nav-left">
+    <span id="nav-bracket">[ ]</span>
+    <button id="acq-btn" aria-expanded="false">Acquisition</button>
+  </div>
 
-<!-- MUTE TOGGLE -->
-<button id="mute-btn" aria-label="Toggle sound">
-  <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-    <line x1="23" y1="9" x2="17" y2="15"/>
-    <line x1="17" y1="9" x2="23" y2="15"/>
-  </svg>
-  <svg id="icon-sound" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-  </svg>
-</button>
+  <a id="wordmark" href="#">Sevenfour</a>
+
+  <div id="nav-right">
+    <button id="mute-btn" aria-label="Toggle sound">
+      <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/>
+        <line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+      <svg id="icon-sound" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+    </button>
+  </div>
+</nav>
 
 <!-- OVERLAY -->
 <div id="overlay"></div>
