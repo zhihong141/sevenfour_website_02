@@ -1671,6 +1671,22 @@
   // ── Video ────────────────────────────────────────────────────────────────
   video.addEventListener('canplay', () => video.classList.add('loaded'));
 
+  // Safety net: force restart if the loop attribute is ignored by the browser
+  video.addEventListener('ended', () => {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  });
+
+  // Also recover if the video stalls or pauses unexpectedly
+  video.addEventListener('pause', () => {
+    // Only auto-resume if not intentionally paused by user (we never pause it)
+    setTimeout(() => {
+      if (video.paused && !video.ended) {
+        video.play().catch(() => {});
+      }
+    }, 300);
+  });
+
   // ── Mute ─────────────────────────────────────────────────────────────────
   const iconMuted = document.getElementById('icon-muted');
   const iconSound = document.getElementById('icon-sound');
